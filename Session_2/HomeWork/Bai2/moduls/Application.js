@@ -42,13 +42,16 @@ class Application{
     }
 
     handlerStartAll = ()=>{
-        for (let i = 0; i < this.index; i++) {
-            this.listItemTime[i].handlerStart();           
+        // for (let i = 0; i < this.index; i++) {
+        //     this.listItemTime[i].handlerStart();           
+        // }
+        for (let i of this.listItemTime) {
+            i.handlerStart();
         }
     }
     handlerStopAll = ()=>{
-        for (let i = 0; i < this.index; i++) {
-            this.listItemTime[i].handlerStop();
+        for (let i of this.listItemTime) {
+            i.handlerStop();
         }
     }
 
