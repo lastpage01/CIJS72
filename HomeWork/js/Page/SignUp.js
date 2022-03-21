@@ -1,9 +1,9 @@
 import { InputCommon } from "../Common/InputCommon.js";
 import { ButtonCommon } from "../Common/ButtonCommon.js";
+import { Input } from "../Common/Input.js";
 import { Login } from "./Login.js";
 class SignUp {
   form = document.createElement("form");
-  checkBox = document.createElement("input");
   inputUser = new InputCommon(
     "material-icons icon",
     "",
@@ -36,6 +36,7 @@ class SignUp {
     "Repeat Password",
     "RePassword"
   );
+  inputCheckbox = new Input("", "", "checkbox", "", "");
   buttonSignUp = new ButtonCommon("btnSignUp", "submit", "Sign Up");
   buttonCancel = new ButtonCommon("btnCancel", "button", "Cancel");
   constructor() {
@@ -52,9 +53,6 @@ class SignUp {
     this.inputEmail.textI("&#xe158;");
 
     ////check box remember me;
-    this.checkBox.type = "checkbox";
-    this.checkBox.id = "I agree ";
-    this.checkBox.required = true;
     let span = document.createElement("span");
     span.innerHTML = " By creating an account you agree to our ";
     span.insertAdjacentHTML(
@@ -62,12 +60,8 @@ class SignUp {
       '<a style="color:dodgerblue">Terms & Privacy.</a>'
     );
     span.style.color = "white";
-
-    let div = document.createElement("div");
-
-    div.appendChild(this.checkBox);
-    div.appendChild(span);
-    div.style.marginTop = "20px";
+    this.inputCheckbox.html().appendChild(span);
+    this.inputCheckbox.html().style.margin = "15px 0 0 0";
 
     ///
 
@@ -76,7 +70,7 @@ class SignUp {
     this.form.appendChild(this.inputEmail.html());
     this.form.appendChild(this.inputPw.html());
     this.form.appendChild(this.inputRepeatPw.html());
-    this.form.appendChild(div);
+    this.form.appendChild(this.inputCheckbox.html());
 
     this.form.appendChild(this.buttonSignUp.html());
 
@@ -105,16 +99,14 @@ class SignUp {
     const password = this.inputPw.getValue();
     const RePassword = this.inputRepeatPw.getValue();
     if (this.checkInput(name, email, password, RePassword) == true) {
-      if (this.checkBox.checked == true) {
+      if (this.inputCheckbox.input.checked == true) {
         firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
             // Signed in
             var user = userCredential.user;
-            console.log(user);
             // ...
-            // this.logout();
             this.logout();
           })
           .catch((error) => {
@@ -122,49 +114,67 @@ class SignUp {
             var errorMessage = error.message;
             // ..
             // e.preventDefault();
-            this.inputEmail.setHtmlErr("Email đã được sử dụng");
-            console.log(error.message);
+            this.inputEmail.setHtmlErr("Email already in use");
           });
       }
     }
   };
 
   checkInput(name, email, password, RePassword) {
+    if (this.checkName(name) == true)
+      if (this.checkEmail(email) == true)
+        if (this.checkPassword(password) == true)
+          if (this.checkRepeatPassword(RePassword, password) == true)
+            return true;
+    return false;
+  }
+  checkName = (name) => {
     if (name == "") {
       this.inputUser.setHtmlErr("Name can not empty");
+      return false;
     } else this.inputUser.setHtmlErr("");
+    return true;
+  };
 
+  checkEmail = (email) => {
     if (email == "") this.inputEmail.setHtmlErr("Email can not empty");
     else if (
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) == false
     )
       this.inputEmail.setHtmlErr("Email invalidated");
-    else this.inputEmail.setHtmlErr("");
+    else {
+      this.inputEmail.setHtmlErr("");
+      return true;
+    }
+    return false;
+  };
 
+  checkPassword = (password) => {
     if (password == "") this.inputPw.setHtmlErr("Password can not empty");
     else if (password.length < 6) {
       this.inputPw.setHtmlErr(
         "Password must be more than or equal to 6 characters"
       );
-    } else this.inputPw.setHtmlErr("");
+    } else {
+      this.inputPw.setHtmlErr("");
+      return true;
+    }
+    return false;
+  };
 
+  checkRepeatPassword = (RePassword, password) => {
     if (RePassword == "")
       this.inputRepeatPw.setHtmlErr("Repeat password can not empty");
     else if (RePassword != password)
       this.inputRepeatPw.setHtmlErr("password does not match");
-    else this.inputRepeatPw.setHtmlErr("");
-
-    if (
-      this.inputUser.getValueErr() == "" &&
-      this.inputEmail.getValueErr() == "" &&
-      this.inputPw.getValueErr() == "" &&
-      this.inputRepeatPw.getValueErr() == ""
-    )
+    else {
+      this.inputRepeatPw.setHtmlErr("");
       return true;
-    else return false;
-  }
-  checkName = () => {};
-  logout() {
+    }
+    return false;
+  };
+
+  logout = () => {
     firebase
       .auth()
       .signOut()
@@ -177,7 +187,7 @@ class SignUp {
         // An error happened.
         console.log(error.message);
       });
-  }
+  };
 }
 
 export { SignUp };

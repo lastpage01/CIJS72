@@ -7,13 +7,10 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="chat"></div>
   </body>
 
-  <!-- SetUp firebase-->
-
   <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
   <script>
     firebase.initializeApp({
@@ -24,10 +21,7 @@
       messagingSenderId: "317724844262",
       appId: "1:317724844262:web:04cb9405164a3c48ab9b27",
     });
-
-    const db = firebase.firestore();
   </script>
 
-  <!-- <script src="./index.js" type="module"></script> -->
-  <script src="./index.js" type="module"></script>
+  <script src="../js/Page/Chat.js" type="module"></script>
 </html>

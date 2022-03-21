@@ -17,6 +17,7 @@ body {
 }
 .icon {
   margin-bottom: 18px;
+  color: #ffffff;
 }
 #login,
 #signUp {

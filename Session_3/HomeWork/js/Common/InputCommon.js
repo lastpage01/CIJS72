@@ -7,6 +7,7 @@ class InputCommon{
         this.input.classList.add(clInput);
         this.input.type = type;
         this.input.placeholder = placeholder;
+        
         this.input.required = true;
 
         this.i.setAttribute("class",clI);
