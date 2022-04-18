@@ -1,0 +1,31 @@
+body {
+  width: 100%;
+  text-align: center;
+}
+.container {
+  width: 100%;
+  text-align: center;
+}
+.point {
+  margin: 30px;
+}
+.answer{
+    width: 100%;
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px;
+    
+    
+}
+.item {
+  border: 1px solid black;
+  width: 300px;
+  text-align: center;
+  cursor: pointer;
+  margin: 10px;
+}
+.item:hover{
+    background-color: rgb(255, 242, 0);
+}

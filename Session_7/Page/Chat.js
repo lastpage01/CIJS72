@@ -40,6 +40,7 @@ class Chat {
     divContent.appendChild(divMainContent);
 
     const divMessage = document.createElement("div");
+    divMessage.classList.add("chat-container");
     divMainContent.appendChild(divMessage);
 
     divMessage.appendChild(this.messageList.container);
@@ -61,30 +62,39 @@ class Chat {
   };
 
   subscribeConversation = () => {
-    db.collection("conversations").onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          console.log("New conversation: ", change.doc.data());
+    db.collection("conversations")
+      .where("users", "array-contains", firebase.auth().currentUser.email)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            console.log("New conversation: ", change.doc.data());
 
-          this.conversationList.handleCreateConversationAdded(
-            change.doc.id,
-            change.doc.data().name,
-            change.doc.data().users
-          );
-        }
-        if (change.type === "modified") {
-          console.log("Modified conversation: ", change.doc.data());
-          this.userList.setActiveConversation({
-            id: change.doc.id,
-            name: change.doc.data().name,
-            users: change.doc.data().users,
-          });
-        }
-        if (change.type === "removed") {
-          this.conversationList.removeItem(change.doc.id);
-        }
+            this.conversationList.handleCreateConversationAdded(
+              change.doc.id,
+              change.doc.data().name,
+              change.doc.data().users
+            );
+          }
+          if (change.type === "modified") {
+            console.log("Modified conversation: ", change.doc.data());
+
+            this.conversationList.handleConversationUpdate(
+              change.doc.id,
+              change.doc.data().name,
+              change.doc.data().users
+            );
+
+            this.userList.setActiveConversation({
+              id: change.doc.id,
+              name: change.doc.data().name,
+              users: change.doc.data().users,
+            });
+          }
+          if (change.type === "removed") {
+            this.conversationList.removeItem(change.doc.id);
+          }
+        });
       });
-    });
   };
 
   subscribeConversationMessageList = () => {
@@ -95,9 +105,12 @@ class Chat {
     this.subscribeConversationMessage = db
       .collection("message")
       .where("conversationId", "==", this.activeConversation.id)
+      .orderBy("sendAt")
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          this.messageList.addMessage(change.doc.data());
+          if (change.type === "added") {
+            this.messageList.addMessage(change.doc.data());
+          }
         });
       });
   };

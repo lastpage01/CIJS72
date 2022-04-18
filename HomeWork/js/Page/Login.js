@@ -89,6 +89,7 @@ class Login {
     login.style.margin = 0;
     let Sign = document.getElementById("signUp");
     Sign.appendChild(signUpScreen.html());
+    
   };
   handleLogin = (e) => {
     e.preventDefault(true);

@@ -24,3 +24,4 @@ firebase.auth().onAuthStateChanged((user) => {
     // window.location = "../html/index.html";
   }
 });
+

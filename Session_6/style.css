@@ -1,0 +1,17 @@
+.header {
+    font-weight: 600;
+    margin: 10px 0;
+}
+.container {
+    display: flex;
+    
+}
+.right-content{
+    flex: 2;
+}
+.left-content{
+    flex: 1;
+}
+.right-main-content{
+    display: flex;
+}
